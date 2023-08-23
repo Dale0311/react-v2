@@ -1,9 +1,10 @@
 import { useState } from 'react';
 
-function Square({value, onClickHandle, xTurn}) {
-  
+function Square({value, combination, index, onClickHandle}) {
+  let style;
+  combination && combination.includes(index)? style = "text-green-500" : "";
   return (
-    <button className={`h-16 w-16 text-lg font-extrabold border border-black flex items-center justify-center`} onClick={onClickHandle}>
+    <button className={`h-16 w-16 text-lg font-extrabold border border-black flex items-center justify-center ${style?? ""}`} onClick={onClickHandle}>
       {value}
     </button>
   );
@@ -18,14 +19,14 @@ function calculateWinner(squares){
     [1, 4, 7],
     [2, 5, 8],
     [0, 4, 8],
-    [2, 4, 6],
+    [2, 4, 6]
   ];
 
   for (let i = 0; i < lines.length; i++) {
     const [a,b,c] = lines[i];
     if(squares[a] && squares[a] === squares[b] && squares[a] === squares[c]){
       // returns an object
-      return squares[a];
+      return {winner: squares[a], winningCombination: [a,b,c]}
     }
   }
 
@@ -33,10 +34,10 @@ function calculateWinner(squares){
 }
 
 function noPossibleMoves(history, squares){
-  return history.length === 10 && calculateWinner(squares) === null;
+  return history.length === 10 && ! calculateWinner(squares);
 }
 
-function Board({xTurn, squares, handlePlay, showHistory, history}){
+function Board({xTurn, squares, handlePlay, history}){
 
   function clickHandle(i){
     if(squares[i] || calculateWinner(squares)){
@@ -52,49 +53,53 @@ function Board({xTurn, squares, handlePlay, showHistory, history}){
     // pass the new square to the handlePlay
     handlePlay(newSquares);
   }
-  const winOrDraw = noPossibleMoves(history, squares)? "Tie: No possible move" : calculateWinner(squares)
+  
   let statusBar;
-  if (winOrDraw) {
+  let winOrDraw;
+  let winningCombination;
+
+  if(calculateWinner(squares) || history.length === 10){
+    winOrDraw = noPossibleMoves(history, squares)? "Tie: No possible move" : calculateWinner(squares);
     if(winOrDraw.length > 1 ){
-      statusBar = winOrDraw;
+      statusBar = winOrDraw.winner;
     }
     else{
-      statusBar = "Winner: " + winOrDraw;
-    }
-  } else {
-    statusBar = "Next player: " + (xTurn ? "X" : "O");
+      winningCombination = winOrDraw.winningCombination;
+      statusBar = "Winner: " + winOrDraw.winner;
+    } 
   }
-
+  else{
+      statusBar = "Next player: " + (xTurn ? "X" : "O");
+  }  
   return (
     <div>
       <p className='text-center'>{statusBar}</p>
       <div className='grid grid-cols-3'>
-        <Square value={squares[0]} xTurn={xTurn} onClickHandle={()=>{clickHandle(0)}} />
-        <Square value={squares[1]} xTurn={xTurn} onClickHandle={()=>{clickHandle(1)}} />
-        <Square value={squares[2]} xTurn={xTurn} onClickHandle={()=>{clickHandle(2)}} />
-        <Square value={squares[3]} xTurn={xTurn} onClickHandle={()=>{clickHandle(3)}} />
-        <Square value={squares[4]} xTurn={xTurn} onClickHandle={()=>{clickHandle(4)}} />
-        <Square value={squares[5]} xTurn={xTurn} onClickHandle={()=>{clickHandle(5)}} />
-        <Square value={squares[6]} xTurn={xTurn} onClickHandle={()=>{clickHandle(6)}} />
-        <Square value={squares[7]} xTurn={xTurn} onClickHandle={()=>{clickHandle(7)}} />
-        <Square value={squares[8]} xTurn={xTurn} onClickHandle={()=>{clickHandle(8)}} />
+        <Square value={squares[0]} index={0} combination={winningCombination?? ""} xTurn={xTurn} onClickHandle={()=>{clickHandle(0)}} />
+        <Square value={squares[1]} index={1} combination={winningCombination?? ""} xTurn={xTurn} onClickHandle={()=>{clickHandle(1)}} />
+        <Square value={squares[2]} index={2} combination={winningCombination?? ""} xTurn={xTurn} onClickHandle={()=>{clickHandle(2)}} />
+        <Square value={squares[3]} index={3} combination={winningCombination?? ""} xTurn={xTurn} onClickHandle={()=>{clickHandle(3)}} />
+        <Square value={squares[4]} index={4} combination={winningCombination?? ""} xTurn={xTurn} onClickHandle={()=>{clickHandle(4)}} />
+        <Square value={squares[5]} index={5} combination={winningCombination?? ""} xTurn={xTurn} onClickHandle={()=>{clickHandle(5)}} />
+        <Square value={squares[6]} index={6} combination={winningCombination?? ""} xTurn={xTurn} onClickHandle={()=>{clickHandle(6)}} />
+        <Square value={squares[7]} index={7} combination={winningCombination?? ""} xTurn={xTurn} onClickHandle={()=>{clickHandle(7)}} />
+        <Square value={squares[8]} index={8} combination={winningCombination?? ""} xTurn={xTurn} onClickHandle={()=>{clickHandle(8)}} />
       </div>
       <div className='my-2 text-end'>
-        <button className='py-2 px-4 bg-green-500 text-white rounded' onClick={showHistory}>Reset</button>
+        <button className='py-2 px-4 bg-green-500 text-white rounded'>Reset</button>
       </div>
     </div>
   )
 }
 
 export default function Game() {
+
   // array of moves that is rendered in ui
-  // [[null, null, null, x, o]]
   const [history, setHistory] = useState([Array(9).fill(null)]);
   const currentSquares = history[history.length - 1];
   
   // bool
   const xTurn = (history.length - 1) % 2 == 0
-
 
   function handlePlay(newSquares){
     setHistory(oldVal => [...oldVal, newSquares]);
