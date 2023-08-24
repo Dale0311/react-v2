@@ -127,3 +127,57 @@
         />
 * Array(9) lets you create an array of 9 elements.fill(value) lets you place the value in each element
     <p> syntax: </p>  Array(9).fill(null)
+
+* props vs state - these are the two types of model data in react.
+    1. Props are like arguments you pass to a function. from parent to child component
+    2. State is like component's memory. it lets a component keeps track of some information and change it in response to interaction.
+
+    In sumarry both are use in a component a parent often keep a data to a state while the child component receive that data in a form of props.
+
+* return - return is so useful when it comes to array, rendering and events
+    example:
+        < picture of magic return here />
+
+* when to use the setter of state directly and fn that use that setter? 
+    * we use setter directly when there's no need for additional data manipulation beside the data of the state
+    * we use fn that uses setter when there's more data to change before or after the setter.
+
+<h1> Steps on creating the ui in React </h1> 
+
+<h2> 0. Single-responsibility principle(SRP) </h2> 
+        * Idealy components should follow the SRP wherein components only do one thing
+
+<h2> 1. Break the UI into a component hierarchy </h2> 
+        * start by drawing boxes around every component and subcomponent in the mockup and naming them
+        * create a hierarchy parent-child relation on every component
+        img here
+
+<h2> 2. Build a static version in React</h2> 
+        * create the static version of the app using the hierarchy that we created
+        * don't add any interactivity yet such as states.
+        * if the project is small we can start by top-down. meaning we'll create the components from top to bottom
+            else, if the project is large create the app from bottom to top.
+
+<h2> 3. Find the minimal but complete representation of UI state</h2>
+        * think of all of the pieces of data that is present to your application
+        * ask yourself what are the state and props
+            * qualifications for a data to be NOT in state:
+                - it remains unchange overtime
+                - passed down from parent to child/this component
+                - can you render/compute it base on existing state/method <br>
+                    example: <br>
+                        const atLegalAge = user.age? true: false
+                        {atLegalAge && < Proceed />}
+                    note: I didn't need to use state because the atLegalAge var is computable using existing state
+
+<h2> 4. Identify where your state should live</h2>
+        * steps to identify on where the state should live
+            1. Identify every component that renders something based on that state.
+            2. Find their closest common parent component, a component above them all in the hierarchy.
+            3. Decide where the state should live
+                3.1 Often, you can put the state directly into their common parent.
+                3.2 You can also put the state into some component above their common parent.
+                3.3 If you can’t find a component where it makes sense to own the state, create a new component solely for holding the state and add it somewhere in the hierarchy above the common parent component.
+                 
+<h2> 5. Add inverse data flow</h2>
+        * basically use the setter of each state in order to rerender the application, tada.
