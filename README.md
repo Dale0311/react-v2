@@ -27,18 +27,20 @@
 * Curly braces let you “escape back” into JavaScript so that you can embed some variable from your code and display it to the user.
 * We can put complex expression inside the JSX curly braces too. <br>
 <p> syntax: </p>  
-    <img src="" alt={'Photo of ' + user.name} />
+    <image src="" alt={'Photo of ' + user.name} />
 
 ### jsx conditional rendering
 * if else conditional rendering 
-<p> syntax: </p>   
-    {isLoggedIn? (</AdminPanel>) : (</LoginForm>)}
+    <p> syntax: </p>   
+        {isLoggedIn? (</AdminPanel>) : (</LoginForm>)}
+
 * if we don't need else, using AND operator
     {</isLoggedIn> && </AdminPanel>}
 * if value in array or object exist then pass it, else return the right side value
     {curr_user = user.name?? default_name }
 * optional chaining - access the property of an object
     {username = user?.name} #returns null if the user is falsy 
+
 ### map function 
 * map fn is important to react in terms of rendering an array of items inside a tag or component 
     e.g: 
@@ -116,7 +118,7 @@
     {} -> first curly braces go to javascript.
     {{}} -> second curly braces to access the object of attribute style
     <p> syntax: </p>   
-        <img
+        <image
         style =
         {{
             width: user.imageSize, 
@@ -124,4 +126,4 @@
         }}
         />
 * Array(9) lets you create an array of 9 elements.fill(value) lets you place the value in each element
-<p> syntax: </p>  Array(9).fill(null)
+    <p> syntax: </p>  Array(9).fill(null)
