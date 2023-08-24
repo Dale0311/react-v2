@@ -2,6 +2,7 @@ import { useState } from 'react';
 
 function Square({value, combination, index, onClickHandle}) {
   let style;
+
   combination && combination.includes(index)? style = "text-green-500" : "";
   return (
     <button className={`h-16 w-16 text-lg font-extrabold border border-black flex items-center justify-center ${style?? ""}`} onClick={onClickHandle}>
@@ -37,7 +38,7 @@ function noPossibleMoves(history, squares){
   return history.length === 10 && ! calculateWinner(squares);
 }
 
-function Board({xTurn, squares, handlePlay, history}){
+function Board({xTurn, resetOrPlayAgain, squares, handlePlay, history}){
 
   function clickHandle(i){
     if(squares[i] || calculateWinner(squares)){
@@ -56,37 +57,36 @@ function Board({xTurn, squares, handlePlay, history}){
   
   let statusBar;
   let winOrDraw;
-  let winningCombination;
-
   if(calculateWinner(squares) || history.length === 10){
     winOrDraw = noPossibleMoves(history, squares)? "Tie: No possible move" : calculateWinner(squares);
     if(winOrDraw.length > 1 ){
-      statusBar = winOrDraw.winner;
+      statusBar = winOrDraw;
     }
     else{
-      winningCombination = winOrDraw.winningCombination;
       statusBar = "Winner: " + winOrDraw.winner;
     } 
   }
   else{
       statusBar = "Next player: " + (xTurn ? "X" : "O");
   }  
+  const squaress = Array(9).fill(Array(9));
+  console.log(squaress)
   return (
     <div>
       <p className='text-center'>{statusBar}</p>
       <div className='grid grid-cols-3'>
-        <Square value={squares[0]} index={0} combination={winningCombination?? ""} xTurn={xTurn} onClickHandle={()=>{clickHandle(0)}} />
-        <Square value={squares[1]} index={1} combination={winningCombination?? ""} xTurn={xTurn} onClickHandle={()=>{clickHandle(1)}} />
-        <Square value={squares[2]} index={2} combination={winningCombination?? ""} xTurn={xTurn} onClickHandle={()=>{clickHandle(2)}} />
-        <Square value={squares[3]} index={3} combination={winningCombination?? ""} xTurn={xTurn} onClickHandle={()=>{clickHandle(3)}} />
-        <Square value={squares[4]} index={4} combination={winningCombination?? ""} xTurn={xTurn} onClickHandle={()=>{clickHandle(4)}} />
-        <Square value={squares[5]} index={5} combination={winningCombination?? ""} xTurn={xTurn} onClickHandle={()=>{clickHandle(5)}} />
-        <Square value={squares[6]} index={6} combination={winningCombination?? ""} xTurn={xTurn} onClickHandle={()=>{clickHandle(6)}} />
-        <Square value={squares[7]} index={7} combination={winningCombination?? ""} xTurn={xTurn} onClickHandle={()=>{clickHandle(7)}} />
-        <Square value={squares[8]} index={8} combination={winningCombination?? ""} xTurn={xTurn} onClickHandle={()=>{clickHandle(8)}} />
+        <Square value={squares[0]} index={0} combination={winOrDraw?.winningCombination?? ""} xTurn={xTurn} onClickHandle={()=>{clickHandle(0)}} />
+        <Square value={squares[1]} index={1} combination={winOrDraw?.winningCombination?? ""} xTurn={xTurn} onClickHandle={()=>{clickHandle(1)}} />
+        <Square value={squares[2]} index={2} combination={winOrDraw?.winningCombination?? ""} xTurn={xTurn} onClickHandle={()=>{clickHandle(2)}} />
+        <Square value={squares[3]} index={3} combination={winOrDraw?.winningCombination?? ""} xTurn={xTurn} onClickHandle={()=>{clickHandle(3)}} />
+        <Square value={squares[4]} index={4} combination={winOrDraw?.winningCombination?? ""} xTurn={xTurn} onClickHandle={()=>{clickHandle(4)}} />
+        <Square value={squares[5]} index={5} combination={winOrDraw?.winningCombination?? ""} xTurn={xTurn} onClickHandle={()=>{clickHandle(5)}} />
+        <Square value={squares[6]} index={6} combination={winOrDraw?.winningCombination?? ""} xTurn={xTurn} onClickHandle={()=>{clickHandle(6)}} />
+        <Square value={squares[7]} index={7} combination={winOrDraw?.winningCombination?? ""} xTurn={xTurn} onClickHandle={()=>{clickHandle(7)}} />
+        <Square value={squares[8]} index={8} combination={winOrDraw?.winningCombination?? ""} xTurn={xTurn} onClickHandle={()=>{clickHandle(8)}} />
       </div>
       <div className='my-2 text-end'>
-        <button className='py-2 px-4 bg-green-500 text-white rounded'>Reset</button>
+        <button className='py-2 px-4 bg-green-500 text-white rounded' onClick={resetOrPlayAgain}>{winOrDraw? "Play again" : "Reset"}</button>
       </div>
     </div>
   )
@@ -105,6 +105,11 @@ export default function Game() {
     setHistory(oldVal => [...oldVal, newSquares]);
   }
 
+  function resetOrPlayAgain(){
+    setHistory(oldVal => [oldVal[0]]);
+    // or
+    // setHistory(oldVal => oldVal.slice(0, 1));
+  }
   // create a way to jump to the state of the squares to a specific index
   function jumpTo(index){
     setHistory(oldVal => oldVal.slice(0, index + 1));
@@ -123,7 +128,7 @@ export default function Game() {
   return(
     <div className='w-screen h-screen flex justify-center items-center'>
       <div className='flex space-x-2'>
-        <Board squares={currentSquares} history={history} handlePlay={handlePlay} xTurn={xTurn} />
+        <Board squares={currentSquares} history={history} resetOrPlayAgain={resetOrPlayAgain} handlePlay={handlePlay} xTurn={xTurn} />
         {/* history of the moves */}
         <div>
           <p>Moves: </p>
@@ -135,5 +140,3 @@ export default function Game() {
     </div>
   )
 }
-
-// TODO : i need a way to highligth the winning combination if there's a winner

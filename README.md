@@ -5,13 +5,13 @@
 * A component is a piece of user interface that has its own logic and apperance
 * Component can be small as a button or as large as entire page
 * Component can be nest inside another component
-    syntax:
+    <p> syntax: </p>  
         function myApp() {
         return  
             ( 
                 <>
-                    <h1>Hello world</h1>
-                    <Button />
+                    <p>Hello world</p>
+                    <MyButton />
                 </>
             );
         }
@@ -25,19 +25,20 @@
 ### jsx 
 * JSX allows you to write HTML in React by converting HTML into React components, helping you to more easily create user interfaces for your web applications.
 * Curly braces let you “escape back” into JavaScript so that you can embed some variable from your code and display it to the user.
-* We can put complex expression inside the JSX curly braces too.
-syntax:
+* We can put complex expression inside the JSX curly braces too. <br>
+<p> syntax: </p>  
     <img src="" alt={'Photo of ' + user.name} />
 
 ### jsx conditional rendering
 * if else conditional rendering 
-syntax: 
+<p> syntax: </p>   
     {isLoggedIn? (</AdminPanel>) : (</LoginForm>)}
 * if we don't need else, using AND operator
     {</isLoggedIn> && </AdminPanel>}
 * if value in array or object exist then pass it, else return the right side value
     {curr_user = user.name?? default_name }
-
+* optional chaining - access the property of an object
+    {username = user?.name} #returns null if the user is falsy 
 ### map function 
 * map fn is important to react in terms of rendering an array of items inside a tag or component 
     e.g: 
@@ -59,8 +60,8 @@ syntax:
     1. Writing functions outside component makes it easier to define, read, and test if the function does not rely on props.
     2. Writing functions inside component will make the function create new instance with every re-render.
     3. fn that are inside a component can access any variable in the component without passing it.
-* passing prop to a callback fn
-    syntax: onClick = {() => handleClick(name)}
+* passing prop to a callback fn 
+    <p> syntax: </p>onClick = {() => handleClick(name)}
 
 ### props
 * are the parameters/arguments that we pass to a component and function
@@ -75,9 +76,9 @@ syntax:
 * it update the getter whenever we invoke the setter
 * it rerenders the components everytime the setter is invoke
 * if the useState is inside the component everytime we invoke that component it will have its own state.
-    everytime we invoke MyButton it will create it's own state not affecting the others MyButton
+    everytime we invoke MyButton it will create it's own state not affecting the others MyButton 
     
-    syntax: 
+    <p> syntax: </p>  
         function MyButton()
             const [num, setnum] = useState(0);
             function handleClick(){setnum(oldVal => oldVal+1)}
@@ -93,7 +94,7 @@ syntax:
 ### Destructuring 101
 * copy the values of the variable
 * unpacking array, object or properties into distinct variables
-syntax: 
+<p> syntax: </p>  
     const arr = [["Peter", "Jane"]]
     const newArr = [...arr, ["Hulk", "Black Widow"]] -> [["Peter", "Jane", "Hulk", "Black Widow"]]
 
@@ -114,7 +115,7 @@ syntax:
     By default style attribute is a object.
     {} -> first curly braces go to javascript.
     {{}} -> second curly braces to access the object of attribute style
-    syntax: 
+    <p> syntax: </p>   
         <img
         style =
         {{
@@ -122,5 +123,5 @@ syntax:
             height: user.imageSize, 
         }}
         />
-* Array(9) lets you create an array of 9 elements .fill(value) lets you place the value in each element
-syntax: Array(9).fill(null)
+* Array(9) lets you create an array of 9 elements.fill(value) lets you place the value in each element
+<p> syntax: </p>  Array(9).fill(null)
