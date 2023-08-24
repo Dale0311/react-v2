@@ -27,7 +27,7 @@
 * Curly braces let you “escape back” into JavaScript so that you can embed some variable from your code and display it to the user.
 * We can put complex expression inside the JSX curly braces too. <br>
 <p> syntax: </p>  
-    <image src="" alt={'Photo of ' + user.name} />
+    < img src="" alt={'Photo of ' + user.name} />
 
 ### jsx conditional rendering
 * if else conditional rendering 
@@ -118,7 +118,7 @@
     {} -> first curly braces go to javascript.
     {{}} -> second curly braces to access the object of attribute style
     <p> syntax: </p>   
-        <image
+        < image
         style =
         {{
             width: user.imageSize, 
