@@ -35,10 +35,10 @@
 
 - if else conditional rendering
     <p> syntax: </p>   
-        {isLoggedIn? (</AdminPanel>) : (</LoginForm>)}
+        {isLoggedIn? (</ AdminPanel>) : (</ LoginForm>)}
 
 - if we don't need else, using AND operator
-  {</isLoggedIn> && </AdminPanel>}
+  {</ isLoggedIn> && </ AdminPanel>}
 - if value in array or object exist then pass it, else return the right side value
   {curr_user = user.name?? default_name }
 - optional chaining - access the property of an object
@@ -163,39 +163,45 @@
 <h1> Steps on creating the ui in React </h1>
 
 <h2> 0. Single-responsibility principle(SRP) </h2> 
-        * Idealy components should follow the SRP wherein components only do one thing
+
+* Idealy components should follow the SRP wherein components only do one thing
 
 <h2> 1. Break the UI into a component hierarchy </h2> 
-        * start by drawing boxes around every component and subcomponent in the mockup and naming them
-        * create a hierarchy parent-child relation on every component
-        img here
+
+* start by drawing boxes around every component and subcomponent in the mockup and naming them
+* create a hierarchy parent-child relation on every component
+img here
 
 <h2> 2. Build a static version in React</h2> 
-        * create the static version of the app using the hierarchy that we created
-        * don't add any interactivity yet such as states.
-        * if the project is small we can start by top-down. meaning we'll create the components from top to bottom
-            else, if the project is large create the app from bottom to top.
+
+* create the static version of the app using the hierarchy that we created
+* don't add any interactivity yet such as states.
+* if the project is small we can start by top-down. meaning we'll create the components from top to bottom
+    else, if the project is large create the app from bottom to top.
 
 <h2> 3. Find the minimal but complete representation of UI state</h2>
-        * think of all of the pieces of data that is present to your application
-        * ask yourself what are the state and props
-            * qualifications for a data to be NOT in state:
-                - it remains unchange overtime
-                - passed down from parent to child/this component
-                - can you render/compute it base on existing state/method <br>
-                    example: <br>
-                        const atLegalAge = user.age? true: false
-                        {atLegalAge && < Proceed />}
-                    note: I didn't need to use state because the atLegalAge var is computable using existing state
+
+* think of all of the pieces of data that is present to your application
+* ask yourself what are the state and props
+    * qualifications for a data to be NOT in state:
+        - it remains unchange overtime
+        - passed down from parent to child/this component
+        - can you render/compute it base on existing state/method <br>
+            example: <br>
+                const atLegalAge = user.age? true: false
+                {atLegalAge && < Proceed />}
+            note: I didn't need to use state because the atLegalAge var is computable using existing state
 
 <h2> 4. Identify where your state should live</h2>
-        * steps to identify on where the state should live
-            1. Identify every component that renders something based on that state.
-            2. Find their closest common parent component, a component above them all in the hierarchy.
-            3. Decide where the state should live
-                3.1 Often, you can put the state directly into their common parent.
-                3.2 You can also put the state into some component above their common parent.
-                3.3 If you can’t find a component where it makes sense to own the state, create a new component solely for holding the state and add it somewhere in the hierarchy above the common parent component.
+
+* steps to identify on where the state should live
+    1. Identify every component that renders something based on that state.
+    2. Find their closest common parent component, a component above them all in the hierarchy.
+    3. Decide where the state should live
+        3.1 Often, you can put the state directly into their common parent.
+        3.2 You can also put the state into some component above their common parent.
+        3.3 If you can’t find a component where it makes sense to own the state, create a new component solely for holding the state and add it somewhere in the hierarchy above the common parent component.
                  
 <h2> 5. Add inverse data flow</h2>
-        * basically use the setter of each state in order to rerender the application, tada.
+
+* basically use the setter of each state in order to rerender the application, tada.
