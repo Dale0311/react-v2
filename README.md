@@ -79,6 +79,12 @@
 - occurs when a certain action is done
 - when passing fn inside a event we don't need parenthesis "()"
 
+### hooks
+
+- functions starting with <b>use</b> keyword
+- can only be called at the top level of your components or your own Hooks.
+- You can’t call Hooks inside conditions, loops, or other nested functions
+
 ### useState
 
 - used to keep track of strings, number, bool, etc.. inside a component.
@@ -101,6 +107,15 @@
   to do this we need to declare the state "upwards" to the parent of MyButton e.g MyApp
   and then pass the values and fn using props
 
+- <h4>Principles for structuring state:</h4>
+  1. <b>Group related state</b> - If we always update two or more state variables at the same time, consider merging them into a single state variable.
+  2. <b>Avoid contradictions in state</b> - if we have two or more state that contradicts each other, try to avoid it.
+  3. <b>Avoid redundancy</b> - if a certain variable can be compute/render from a existing props/state, create a normal var.
+  4. <b>Avoid duplication in state</b> 
+  5. <b>Avoid deeply nested state</b>
+
+  links to docu - <u>https://react.dev/learn/choosing-the-state-structure</u>
+
 ### Destructuring 101
 
 - copy the values of the variable
@@ -108,11 +123,20 @@
   <p> syntax: </p>  
       const arr = [["Peter", "Jane"]]
       const newArr = [...arr, ["Hulk", "Black Widow"]] -> [["Peter", "Jane", "Hulk", "Black Widow"]]
-
+      <br>
       or
+      <br>
 
-      const persons = [{name: "Peter"}, {name: "Jane"}]
-      const [person1, person2] = ...persons
+      const persons = [{name: "Peter"}, {name: "Jane"}, {name: "Steve"}, {name: "Ironman"}]
+      const [person1, person2, ...rest] = ...persons
+      <br>
+      or
+      <br>
+
+      const {name, id} = e.target -> #extract the name and id values
+
+      note:
+      1. syntax sensitive, arr = [], obj = {}
 
 ### Pure functions
 
@@ -152,56 +176,63 @@
 
   In sumarry both are use in a component a parent often keep a data to a state while the child component receive that data in a form of props.
 
-- return - return is so useful when it comes to array, rendering and events
+- return - return is so useful when it comes to array, rendering, conditionals and events
   example:
   < picture of magic return here />
 
 - when to use the setter of state directly and fn that use that setter?
+
   - we use setter directly when there's no need for additional data manipulation beside the data of the state
   - we use fn that uses setter when there's more data to change before or after the setter.
 
+- computed property - use the result of the expression as the property name of an object.
+  example: {...obj, [ name]: "dale"} -> whatever value the name holds it will use as key at the value "dale";
+
+- template literal - merge strings variables together.
+  example: <h1>Hi, {isNameSet ? `${name.firstName} ${name.lastName}` : "guest"}</h1>
+
 <h1> Steps on creating the ui in React </h1>
 
-<h2> 0. Single-responsibility principle(SRP) </h2> 
+<h2> 0. Single-responsibility principle(SRP) </h2>
 
-* Idealy components should follow the SRP wherein components only do one thing
+- Idealy components should follow the SRP wherein components only do one thing
 
-<h2> 1. Break the UI into a component hierarchy </h2> 
+<h2> 1. Break the UI into a component hierarchy </h2>
 
-* start by drawing boxes around every component and subcomponent in the mockup and naming them
-* create a hierarchy parent-child relation on every component
-img here
+- start by drawing boxes around every component and subcomponent in the mockup and naming them
+- create a hierarchy parent-child relation on every component
+  img here
 
-<h2> 2. Build a static version in React</h2> 
+<h2> 2. Build a static version in React</h2>
 
-* create the static version of the app using the hierarchy that we created
-* don't add any interactivity yet such as states.
-* if the project is small we can start by top-down. meaning we'll create the components from top to bottom
-    else, if the project is large create the app from bottom to top.
+- create the static version of the app using the hierarchy that we created
+- don't add any interactivity yet such as states.
+- if the project is small we can start by top-down. meaning we'll create the components from top to bottom
+  else, if the project is large create the app from bottom to top.
 
 <h2> 3. Find the minimal but complete representation of UI state</h2>
 
-* think of all of the pieces of data that is present to your application
-* ask yourself what are the state and props
-    * qualifications for a data to be NOT in state:
-        - it remains unchange overtime
-        - passed down from parent to child/this component
-        - can you render/compute it base on existing state/method <br>
-            example: <br>
-                const atLegalAge = user.age? true: false
-                {atLegalAge && < Proceed />}
-            note: I didn't need to use state because the atLegalAge var is computable using existing state
+- think of all of the pieces of data that is present to your application
+- ask yourself what are the state and props
+  - qualifications for a data to be NOT in state:
+    - it remains unchange overtime
+    - passed down from parent to child/this component
+    - can you render/compute it base on existing state/method <br>
+      example: <br>
+      const atLegalAge = user.age? true: false
+      {atLegalAge && < Proceed />}
+      note: I didn't need to use state because the atLegalAge var is computable using existing state
 
 <h2> 4. Identify where your state should live</h2>
 
-* steps to identify on where the state should live
-    1. Identify every component that renders something based on that state.
-    2. Find their closest common parent component, a component above them all in the hierarchy.
-    3. Decide where the state should live
-        3.1 Often, you can put the state directly into their common parent.
-        3.2 You can also put the state into some component above their common parent.
-        3.3 If you can’t find a component where it makes sense to own the state, create a new component solely for holding the state and add it somewhere in the hierarchy above the common parent component.
-                 
+- steps to identify on where the state should live
+  1. Identify every component that renders something based on that state.
+  2. Find their closest common parent component, a component above them all in the hierarchy.
+  3. Decide where the state should live
+     3.1 Often, you can put the state directly into their common parent.
+     3.2 You can also put the state into some component above their common parent.
+     3.3 If you can’t find a component where it makes sense to own the state, create a new component solely for holding the state and add it somewhere in the hierarchy above the common parent component.
+
 <h2> 5. Add inverse data flow</h2>
 
-* basically use the setter of each state in order to rerender the application, tada.
+- basically use the setter of each state in order to rerender the application, tada.
