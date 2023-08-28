@@ -116,27 +116,52 @@
 
   links to docu - <u>https://react.dev/learn/choosing-the-state-structure</u>
 
+- <b>Setting state only changes it for the next render</b>
+  example: <br>
+  < btn onclick={()=>{
+  setNum(oldval => oldVal + 1); -> the value of num will be 1 on the next render
+  setNum(oldval => oldVal + 1); -> the value of num will be 1 on the next render
+  setNum(oldval => oldVal + 1); -> the value of num will be 1 on the next render
+  }}> <br>
+  Note:
+  1. whenever we changes the value of state variable it doesn't automatically re-render,
+  2. it executes the rest of the code before re-render
+  3. if we access the state variable after updating it we'll have the snapshot value instead of the updated one.
+     example:
+     handleClick(){
+     setNum(oldVal => oldVal + 1)
+     alert(num) -> expected output: 0 not 1
+     }
+
 ### Destructuring 101
 
 - copy the values of the variable
 - unpacking array, object or properties into distinct variables
-  <p> syntax: </p>  
-      const arr = [["Peter", "Jane"]]
-      const newArr = [...arr, ["Hulk", "Black Widow"]] -> [["Peter", "Jane", "Hulk", "Black Widow"]]
-      <br>
-      or
-      <br>
+    <p> syntax: </p>  
+        const arr = [["Peter", "Jane"]]
+        const newArr = [...arr, ["Hulk", "Black Widow"]] -> [["Peter", "Jane", "Hulk", "Black Widow"]]
+        <br>
+        or
+        <br>
 
-      const persons = [{name: "Peter"}, {name: "Jane"}, {name: "Steve"}, {name: "Ironman"}]
-      const [person1, person2, ...rest] = ...persons
-      <br>
-      or
-      <br>
+        const persons = [{name: "Peter"}, {name: "Jane"}, {name: "Steve"}, {name: "Ironman"}]
+        const [person1, person2, ...rest] = ...persons
+        <br>
+        or
+        <br>
 
-      const {name, id} = e.target -> #extract the name and id values
+        const {name, id} = e.target -> #extract the name and id values
 
-      note:
-      1. syntax sensitive, arr = [], obj = {}
+        note: syntax sensitive, arr = [], obj = {}
+
+    <p>Updating a nested object: </p>
+      setPerson({
+      ...person, // Copy other fields
+      artwork: { // but replace the artwork
+        ...person.artwork, // with the same one
+        city: 'New Delhi' // but in New Delhi!
+      }
+  });
 
 ### Pure functions
 
@@ -144,6 +169,28 @@
 - <b>Same inputs, same output.</b> Given the same inputs, a component should always return the same JSX.
 - <b>You should not mutate any of the inputs that your components use for rendering </b>. That includes props, state, and context. To update the screen, “set” state instead of mutating preexisting objects or copy the props to modify.
 - When you need to “change things”, you’ll usually want to do it in an event handler
+
+### Steps on requesting and serving UI
+
+1. Triggering a render (delivering the guest’s order to the kitchen)
+
+- It’s the component’s <b>initial render</b>.
+- The component’s (or one of its ancestors’) state has been updated.
+
+2. React renders your components
+
+- On initial render, React will call the <b> root component. </b>
+- For subsequent renders, React will call the <b>function component</b> whose state update triggered the render.
+
+<p>
+  This process is recursive: if the updated component returns some other component, React will render that component next, and if that component also returns something, it will render that component next, and so on. The process will continue until there are no more nested components and React knows exactly what should be displayed on screen.
+</p>
+
+3. React commits changes to the DOM
+
+- After rendering (calling) your components, React will modify the DOM.
+- For re-renders, React will apply the minimal necessary operations (calculated while rendering!) to make the DOM match the latest rendering output.
+- <b>React only changes the DOM nodes if there’s a difference between renders.</b>
 
 ### Necessary things
 
@@ -190,6 +237,21 @@
 
 - template literal - merge strings variables together.
   example: <h1>Hi, {isNameSet ? `${name.firstName} ${name.lastName}` : "guest"}</h1>
+
+- useImmer?
+
+- array crud when it is on state
+
+  1. adding = spread e.g -> [...users, "Dale"];
+  2. removing = slice e.g -> const newUsers = users.slice(5, 6);
+  3. replacing = map e.g -> const newUsers = users.map(logic here)
+  4. sorting = copy the array first and use sort.
+
+  or
+
+  you could mutate the array directly using <b>useImmer</b>
+
+  docu: https://react.dev/learn/updating-arrays-in-state
 
 <h1> Steps on creating the ui in React </h1>
 

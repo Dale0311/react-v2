@@ -1,43 +1,32 @@
 import { useState } from "react";
 
-export default function Form() {
-  const [name, setName] = useState({ firstName: "", lastName: "" });
-  const isNameSet = name.firstName || name.lastName ? true : false;
-  function handleFirstNameChange(e) {
-    const { name, value } = e.target;
-    setName((oldVal) => {
-      return { ...oldVal, [name]: value };
-    });
-  }
+let initialArtists = [
+  { id: 0, name: "Marta Colvin Andrade" },
+  { id: 1, name: "Lamidi Olonade Fakeye" },
+  { id: 2, name: "Louise Nevelson" },
+];
 
-  function handleLastNameChange(e) {
-    const { name, value } = e.target;
-    setName((oldVal) => {
-      return { ...oldVal, [name]: value };
-    });
-  }
-
-  function handleReset() {
-    firstName = "";
-    lastName = "";
-  }
+export default function List() {
+  const [artists, setArtists] = useState(initialArtists);
 
   return (
-    <form onSubmit={(e) => e.preventDefault()}>
-      <input
-        placeholder="First name"
-        value={name.firstName}
-        onChange={handleFirstNameChange}
-        name="firstName"
-      />
-      <input
-        placeholder="Last name"
-        value={name.lastName}
-        onChange={handleLastNameChange}
-        name="lastName"
-      />
-      <h1>Hi, {isNameSet ? `${name.firstName} ${name.lastName}` : "guest"}</h1>
-      <button onClick={handleReset}>Reset</button>
-    </form>
+    <>
+      <h1>Inspiring sculptors:</h1>
+      <ul className="space-y-4">
+        {artists.map((artist) => (
+          <li key={artist.id}>
+            {artist.name}{" "}
+            <button
+              className="py-2 px-4 bg-red-500 text-white rounded"
+              onClick={() => {
+                setArtists(artists.filter((artis) => artis.id !== artist.id));
+              }}
+            >
+              Delete
+            </button>
+          </li>
+        ))}
+      </ul>
+    </>
   );
 }
