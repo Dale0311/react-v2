@@ -182,7 +182,7 @@
 - On initial render, React will call the <b> root component. </b>
 - For subsequent renders, React will call the <b>function component</b> whose state update triggered the render.
 
-<p>
+<p> 
   This process is recursive: if the updated component returns some other component, React will render that component next, and if that component also returns something, it will render that component next, and so on. The process will continue until there are no more nested components and React knows exactly what should be displayed on screen.
 </p>
 
@@ -191,6 +191,40 @@
 - After rendering (calling) your components, React will modify the DOM.
 - For re-renders, React will apply the minimal necessary operations (calculated while rendering!) to make the DOM match the latest rendering output.
 - <b>React only changes the DOM nodes if there’s a difference between renders.</b>
+
+### useReducer
+
+- much like useState, it allows the user to create complex logic into a one function
+  declaration:
+  const [ todos, dispatch] = useReducer(todosReducer, intialState)
+
+  - 1. todos - the values
+  - 2. dispatch - special fn that takes 1 parameter called action(object) that typically holds a type(string) and key value pair that modifies the initialState
+  - 3. todosReducer - a fn that handles all the logic that takes two arguments
+       <br>3.1 todos - the values
+       <br>3.2 action - the object that we pass from dispatch.
+       <br>3.3 returns the updated value of todos.
+       <br>3.4 typically consist of switch stmt or if else.
+
+  - 4. initialState or initial value
+
+- <h4>3 steps to migrate from state to reducer <h4>
+
+1.  Move from setting state to dispatching actions
+
+- for all the state functions, replace it with a dispatch that takes an object
+- object(action) typically contains a key value pair that modifies the initialState value
+
+2. Write a reducer function
+
+- it is pass to the initial render of useReducer
+  syntax: const [ todos, dispatch] = useReducer(todosReducer, initialState)
+
+- typically consist of all the logic of the setter of todos
+
+3. Use the reducer from your component 
+- const [tasks, dispatch] = useReducer(tasksReducer, initialTasks);
+### useContext passing data from parent to subsequent child without props.
 
 ### Necessary things
 
@@ -234,9 +268,11 @@
 
 - computed property - use the result of the expression as the property name of an object.
   example: {...obj, [ name]: "dale"} -> whatever value the name holds it will use as key at the value "dale";
+  note: when accessing a key in obj instead of using .(dot) we use squarebrackets even tho it is a obj
+  <br>syntax: value={ message[id] } -> <b>the value of message[contact.id]</b> 
 
 - template literal - merge strings variables together.
-  example: <h1>Hi, {isNameSet ? `${name.firstName} ${name.lastName}` : "guest"}</h1>
+  example: < h1>Hi, {isNameSet ? `${name.firstName} ${name.lastName}` : "guest"}</ h1>
 
 - useImmer?
 
@@ -252,6 +288,7 @@
   you could mutate the array directly using <b>useImmer</b>
 
   docu: https://react.dev/learn/updating-arrays-in-state
+
 
 <h1> Steps on creating the ui in React </h1>
 
