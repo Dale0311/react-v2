@@ -232,25 +232,25 @@
 
 - steps on creating a context:
 
-<b>1. create the context</b>
-   import { createContext } from 'react';
-   export const LevelContext = createContext(1) -> 1 arg and it's the initial value
+<b>1. create the context</b><br>
+import { createContext } from 'react';
+export const LevelContext = createContext(1) -> 1 arg and it's the initial value
 
 note: this has its own file. e.g LevelContext.jsx
 
-<br><b>2. Use the context</b>
+<br><b>2. Use the context</b><br>
 import {useContext} from "react";
 import {LevelContext} from "./LevelContext.jsx";
 
 export default function Section() {
 const level = useContext(LevelContext);
 <br>
-    <b>3. Provide the context:</b>
-    < section className="section">
-      < LevelContext.Provider value={level}>
-        {children}
-      </ LevelContext.Provider>
-    </ section>
+<b>3. Provide the context:</b><br>
+< section className="section">
+< LevelContext.Provider value={level}>
+{children}
+</ LevelContext.Provider>
+</ section>
 
 }
 
