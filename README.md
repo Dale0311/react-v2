@@ -222,9 +222,47 @@
 
 - typically consist of all the logic of the setter of todos
 
-3. Use the reducer from your component 
+3. Use the reducer from your component
+
 - const [tasks, dispatch] = useReducer(tasksReducer, initialTasks);
+
 ### useContext passing data from parent to subsequent child without props.
+
+- an alternative to passing props
+
+- steps on creating a context:
+
+<b>1. create the context</b>
+   import { createContext } from 'react';
+   export const LevelContext = createContext(1) -> 1 arg and it's the initial value
+
+note: this has its own file. e.g LevelContext.jsx
+
+<br><b>2. Use the context</b>
+import {useContext} from "react";
+import {LevelContext} from "./LevelContext.jsx";
+
+export default function Section() {
+const level = useContext(LevelContext);
+<br>
+    <b>3. Provide the context:</b>
+    < section className="section">
+      < LevelContext.Provider value={level}>
+        {children}
+      </ LevelContext.Provider>
+    </ section>
+
+}
+
+- <h4>Use cases for context</h4>:
+
+- <b>Theming</b> If your app lets the user change its appearance (e.g. dark mode), you can put a context provider at the top of your app
+
+- <b>Current account</b> Many components might need to know the currently logged in user. Putting it in context makes it convenient to read it anywhere in the tree.
+
+- <b>Routing</b> Most routing solutions use context internally to hold the current route.
+
+- <b>Managing state</b> As your app grows, you might end up with a lot of state closer to the top of your app. Many distant components below may want to change it
 
 ### Necessary things
 
@@ -269,7 +307,7 @@
 - computed property - use the result of the expression as the property name of an object.
   example: {...obj, [ name]: "dale"} -> whatever value the name holds it will use as key at the value "dale";
   note: when accessing a key in obj instead of using .(dot) we use squarebrackets even tho it is a obj
-  <br>syntax: value={ message[id] } -> <b>the value of message[contact.id]</b> 
+  <br>syntax: value={ message[id] } -> <b>the value of message[contact.id]</b>
 
 - template literal - merge strings variables together.
   example: < h1>Hi, {isNameSet ? `${name.firstName} ${name.lastName}` : "guest"}</ h1>
@@ -289,6 +327,18 @@
 
   docu: https://react.dev/learn/updating-arrays-in-state
 
+- <b>children</b> - a special props that lets you render the value of it inside a component
+  <br>
+  e.g:
+  < MySection>
+  < Sort />
+  < Todos />
+  < AddTodo />
+  </ MySection>
+  <br>
+  function MySection({children}){
+  < section>{children}</ section>
+  }
 
 <h1> Steps on creating the ui in React </h1>
 
