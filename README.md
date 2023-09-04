@@ -254,7 +254,7 @@ const level = useContext(LevelContext);
 
 }
 
-- <h4>Use cases for context</h4>:
+- <h4>Use cases for context:</h4>
 
 - <b>Theming</b> If your app lets the user change its appearance (e.g. dark mode), you can put a context provider at the top of your app
 
@@ -264,8 +264,117 @@ const level = useContext(LevelContext);
 
 - <b>Managing state</b> As your app grows, you might end up with a lot of state closer to the top of your app. Many distant components below may want to change it
 
-### Necessary things
+### useRef: remember information but doesn't rerender
 
+- A ref is like a secret pocket of your component that React doesn’t track. For example, you can use refs to store timeout IDs, DOM elements, and other objects <b> that don’t impact the component’s rendering output. </b>
+
+<br>syntax:<br>
+import {useRef} from "react"<br>
+const refCount = useRef(0) <br>
+
+- refCount is a object that have a key value of {current: 0}
+- refCount.current -> to access the value
+- refCount.current = value -> to update the value
+
+- When a piece of information is used for rendering, keep it in state. When a piece of information is only needed by event handlers and changing it doesn’t require a re-render, using a ref may be more efficient.
+
+- When to use refs
+
+  - Storing timeout IDs
+  - <b>Storing and manipulating DOM elements</b>
+  - Storing other objects that aren’t necessary to calculate the JSX.
+
+- Throttling is the action of reducing the number of times a function can be called over time to exactly one.
+- Debouncing is a function called after N amount of time passes since its last call. It reacts to a seemingly resolved state and implies a delay between the event and the handler function call.
+  e.g: <br>
+  - we have a input, that calls the api base on the input's value.
+  - we don't want to call the api everytime we changes the input's value
+  - instead we want to call the api after the user stop changing the input's value.
+
+refs: https://redd.one/blog/debounce-vs-throttle
+
+- useRef is useful when interacting with DOM elements
+  <br>e.g input ref={inputRef}
+
+- use forwardRef to pass a ref to component
+  <br>syntax: <br>
+  <br>import {useRef, forwardRef} from "react"
+  <br> const MyInput = forwardRef(({props here}, ref) => { code here })
+
+- docu: https://react.dev/learn/manipulating-the-dom-with-refs#recap
+
+- Maps are like objects but it varries in: 
+  - key Types - unlike object who convert all keys to string, map keys can be any datatypes.
+  - Iteration Order - maps keeps the order of key-value pair
+  - methods - maps is rich interms of method. suchs as set, get, has, delete, size
+
+- Sets are like anyother data structures but it works only with array
+  - store unique values
+  - Immutability - sets are mutables meaning we can perform crud in the variable which is not good.
+
+- flushSync is use when we want to force the update instead of que update, so the user interface "never lags behind"
+syntax:
+<br> import {flushSync} from "react 
+<br> wrap the setter to a flushSync(()=>{ setItems([...items, newItem])})
+
+- <b>Best Practices using refs<b>
+ - Avoid changing DOM nodes managed by React. such as conditional rendered by react, 
+
+- <h4>useEffect</h4>
+  - useEffect runs everytime after ui rendered
+  - useEffect can run after its dependencies change
+
+- <b>How to write an Effect</b>
+
+1. <b>Declare an Effect </b> By default, your Effect will run after every render.
+2. <b>Specify the Effect dependencies</b> Most Effects should only re-run when needed rather than after every render.
+3. <b>Add cleanup if needed </b>
+
+- <b> <h4>How to handle the Effect firing twice in development? </h4> </b>
+ - Common patterns
+  - <b>Controlling non-React widgets</b>
+  - <b>Subscribing to events</b>
+      <p>If we addEventListener to a element, cleanup return should removeEventListener</p> 
+  - <b>Triggering animations </b>
+      <p>If the Effect animates something in, the cleanup function should reset the animation to the initial value</p>
+  - <b>Fetching data</b>
+      <p>If your Effect fetches something, the cleanup function should either abort the fetch or ignore its result:</p>
+      <p>create a ignore variable that we changes it bool value to true</p>
+  - <b>Not an Effect: Initializing the application </b>
+      <p>Some logic should only run once when the application starts. You can put it outside your components:</p>
+  - <b>Not an Effect: Buying a product </b>
+      <p>Buying product is not an effect because it is cause by a particular interaction.</p>
+      <p>any interaction that is specific can be a eventhandlers</p>
+  - <b>Development-only behaviors</b>
+      <p>When Strict Mode is on, React remounts every component once after mount (state and DOM are preserved). This helps you find Effects that need cleanup and exposes bugs like race conditions early. Additionally, React will remount the Effects whenever you save a file in development. Both of these behaviors are development-only.
+      </p>
+  - <b>Recap:</b>
+    - Unlike events, Effects are caused by rendering itself rather than a particular interaction.
+    - Effects let you synchronize a component with some external system (third-party API, network, etc).
+    - By default, Effects run after every render (including the initial one).
+    - React will skip the Effect if all of its dependencies have the same values as during the last render.
+    - You can’t “choose” your dependencies. They are determined by the code inside the Effect.
+
+- <b>You Might Not Need an Effect </b>
+  - You don’t need Effects to transform data for rendering.
+    <p>such as variables that can be compute from existing state, props, or context</p>
+
+  - You don’t need Effects to handle user events.
+    <p>It is handled by the corresponding event handlers</p>
+
+- <h4>useMemo </h4>
+  - it is a function that runs with dep, if the dep doesn't change in re-render it return the cache value
+  
+  - Is use to optimize the performance of a React component by memoizing (caching) the results of a calculation or function.
+  
+  - params: calculateValue, dependencies
+    - calculateValue is a <b>pure calculations</b>
+    - dependencies are variables that when change it reruns the calculateValue in the next render
+  
+  - how to tell if calculation is expensive
+    - if the time it takes to compute is > 1ms, then we will opt to useMemo
+
+### Necessary things
 - importing:
   local
   import <name> from "./src/img/profile"
@@ -286,7 +395,7 @@ const level = useContext(LevelContext);
         }}
         />
 - Array(9) lets you create an array of 9 elements.fill(value) lets you place the value in each element
-    <p> syntax: </p>  Array(9).fill(null)
+    <p> syntax: </p> Array(9).fill(null)
 
 - props vs state - these are the two types of model data in react.
 
@@ -331,14 +440,17 @@ const level = useContext(LevelContext);
   <br>
   e.g:
   < MySection>
-  < Sort />
-  < Todos />
-  < AddTodo />
+    < Sort />
+    < Todos />
+    < AddTodo />
   </ MySection>
   <br>
   function MySection({children}){
   < section>{children}</ section>
   }
+
+- <b>mounting</b> an instance of a component is being created and inserted into the DOM.
+- <b>unmounting</b> the component is not needed and gets unmounted.
 
 <h1> Steps on creating the ui in React </h1>
 
