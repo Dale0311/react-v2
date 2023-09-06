@@ -1,55 +1,75 @@
-import React, { useState, useEffect, useMemo } from "react";
+import { useState, useEffect } from "react";
 
-function App() {
-  const numbers = [...namesArray];
-  const [isReverse, setIsReverse] = useState(false);
-  const [count, setCount] = useState(0);
+export default function Page() {
+  const [planetList, setPlanetList] = useState([]);
+  const [planetId, setPlanetId] = useState("");
 
-  function tempFn(isReverse, numbers) {
-    let tempVar = [...numbers];
-    if (isReverse) {
-      tempVar = tempVar.reverse();
-    }
-    return tempVar;
-  }
+  const [placeList, setPlaceList] = useState([]);
+  const [placeId, setPlaceId] = useState("");
 
-  // const t1 = performance.now();
-  // const reverseNumbers = tempFn(isReverse, numbers);
-  // const t2 = performance.now();
-  // console.log(`time: ${t1} - ${t2} ms`);
-  // using memo
-  const t1 = performance.now();
-  const reverseNumbers = useMemo(
-    () => tempFn(isReverse, numbers),
-    [isReverse, numbers]
-  );
-  const t2 = performance.now();
-  console.log(`time: ${t1} - ${t2} ms`);
+  useEffect(() => {
+    let ignore = false;
+    fetchData("/planets").then((result) => {
+      if (!ignore) {
+        console.log("Fetched a list of planets.");
+        setPlanetList(result);
+        setPlanetId(result[0].id); // Select the first planet
+      }
+    });
+    return () => {
+      ignore = true;
+    };
+  }, []);
+
+  useEffect(() => {
+    let ignore = false;
+    fetchData(`/planets/${planetId}/places`).then((result) => {
+      if (!ignore) {
+        console.log("Fetched a list of planets.");
+        setPlanetList(result);
+        setPlanetId(result[0].id); // Select the first planet
+      }
+    });
+    return () => {
+      ignore = true;
+    };
+  }, [planetId]);
   return (
     <>
-      <button
-        onClick={() => {
-          setIsReverse((isRerverse) => !isRerverse);
-        }}
-      >
-        Reverse
-      </button>
-      <button
-        onClick={() => {
-          setCount((count) => count + 1);
-        }}
-      >
-        add 1 to count
-      </button>
-      <ul>
-        {reverseNumbers &&
-          reverseNumbers.map((num, id) => {
-            return <li key={id}>{num}</li>;
-          })}
-      </ul>
-      <h1>{count}</h1>
+      <label>
+        Pick a planet:{" "}
+        <select
+          value={planetId}
+          onChange={(e) => {
+            setPlanetId(e.target.value);
+          }}
+        >
+          {planetList.map((planet) => (
+            <option key={planet.id} value={planet.id}>
+              {planet.name}
+            </option>
+          ))}
+        </select>
+      </label>
+      <label>
+        Pick a place:{" "}
+        <select
+          value={placeId}
+          onChange={(e) => {
+            setPlaceId(e.target.value);
+          }}
+        >
+          {placeList.map((place) => (
+            <option key={place.id} value={place.id}>
+              {place.name}
+            </option>
+          ))}
+        </select>
+      </label>
+      <hr />
+      <p>
+        You are going to: {placeId || "???"} on {planetId || "???"}{" "}
+      </p>
     </>
   );
 }
-
-export default App;

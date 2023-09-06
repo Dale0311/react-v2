@@ -43,6 +43,8 @@
   {curr_user = user.name?? default_name }
 - optional chaining - access the property of an object
   {username = user?.name} #returns null if the user is falsy
+- if we want to use OR
+  {placeId || '???'} -> if first is truthy else return the second
 
 ### map function
 
@@ -78,6 +80,8 @@
 
 - occurs when a certain action is done
 - when passing fn inside a event we don't need parenthesis "()"
+
+- list of events: https://developer.mozilla.org/en-US/docs/Web/Events#event_listing
 
 ### hooks
 
@@ -124,6 +128,7 @@
   setNum(oldval => oldVal + 1); -> the value of num will be 1 on the next render
   }}> <br>
   Note:
+
   1. whenever we changes the value of state variable it doesn't automatically re-render,
   2. it executes the rest of the code before re-render
   3. if we access the state variable after updating it we'll have the snapshot value instead of the updated one.
@@ -132,6 +137,13 @@
      setNum(oldVal => oldVal + 1)
      alert(num) -> expected output: 0 not 1
      }
+
+- <b>Storing information from previous renders</b>
+- Usually, you will update state in event handlers. However, in rare cases you might want to adjust state in response to rendering — for example, you might want to change a state variable when a prop changes.
+  - If the value you need can be computed entirely from the current props or other state, remove that redundant state altogether. If you’re worried about recomputing too often, the useMemo Hook can help.
+  - If you want to reset the entire component tree’s state, pass a different key to your component.
+  - If you can, update all the relevant state in the event handlers.
+  - if none of the above works, try to use state e.g: const [prevCount, setPrevCount] = useState(count);
 
 ### Destructuring 101
 
@@ -303,78 +315,113 @@ refs: https://redd.one/blog/debounce-vs-throttle
 
 - docu: https://react.dev/learn/manipulating-the-dom-with-refs#recap
 
-- Maps are like objects but it varries in: 
+- Maps are like objects but it varries in:
+
   - key Types - unlike object who convert all keys to string, map keys can be any datatypes.
   - Iteration Order - maps keeps the order of key-value pair
   - methods - maps is rich interms of method. suchs as set, get, has, delete, size
 
 - Sets are like anyother data structures but it works only with array
+
   - store unique values
   - Immutability - sets are mutables meaning we can perform crud in the variable which is not good.
 
 - flushSync is use when we want to force the update instead of que update, so the user interface "never lags behind"
-syntax:
-<br> import {flushSync} from "react 
-<br> wrap the setter to a flushSync(()=>{ setItems([...items, newItem])})
+  syntax:
+  <br> import {flushSync} from "react
+  <br> wrap the setter to a flushSync(()=>{ setItems([...items, newItem])})
 
-- <b>Best Practices using refs<b>
- - Avoid changing DOM nodes managed by React. such as conditional rendered by react, 
+- <b>Best Practices using refs</b>
+- Avoid changing DOM nodes managed by React. such as conditional rendered by react,
 
-- <h4>useEffect</h4>
-  - useEffect runs everytime after ui rendered
-  - useEffect can run after its dependencies change
+### useEffect
+
+- useEffect runs everytime after ui rendered
+- useEffect can run after its dependencies change
 
 - <b>How to write an Effect</b>
 
-1. <b>Declare an Effect </b> By default, your Effect will run after every render.
-2. <b>Specify the Effect dependencies</b> Most Effects should only re-run when needed rather than after every render.
-3. <b>Add cleanup if needed </b>
+  1. <b>Declare an Effect </b> By default, your Effect will run after every render.
+  2. <b>Specify the Effect dependencies</b> Most Effects should only re-run when needed rather than after every render.
+  3. <b>Add cleanup if needed </b>
 
-- <b> <h4>How to handle the Effect firing twice in development? </h4> </b>
- - Common patterns
-  - <b>Controlling non-React widgets</b>
-  - <b>Subscribing to events</b>
-      <p>If we addEventListener to a element, cleanup return should removeEventListener</p> 
-  - <b>Triggering animations </b>
-      <p>If the Effect animates something in, the cleanup function should reset the animation to the initial value</p>
-  - <b>Fetching data</b>
-      <p>If your Effect fetches something, the cleanup function should either abort the fetch or ignore its result:</p>
-      <p>create a ignore variable that we changes it bool value to true</p>
-  - <b>Not an Effect: Initializing the application </b>
-      <p>Some logic should only run once when the application starts. You can put it outside your components:</p>
-  - <b>Not an Effect: Buying a product </b>
-      <p>Buying product is not an effect because it is cause by a particular interaction.</p>
-      <p>any interaction that is specific can be a eventhandlers</p>
-  - <b>Development-only behaviors</b>
-      <p>When Strict Mode is on, React remounts every component once after mount (state and DOM are preserved). This helps you find Effects that need cleanup and exposes bugs like race conditions early. Additionally, React will remount the Effects whenever you save a file in development. Both of these behaviors are development-only.
-      </p>
-  - <b>Recap:</b>
-    - Unlike events, Effects are caused by rendering itself rather than a particular interaction.
-    - Effects let you synchronize a component with some external system (third-party API, network, etc).
-    - By default, Effects run after every render (including the initial one).
-    - React will skip the Effect if all of its dependencies have the same values as during the last render.
-    - You can’t “choose” your dependencies. They are determined by the code inside the Effect.
+- <h4>How to handle the Effect firing twice in development? </h4>
+- Common patterns
+- <b>Controlling non-React widgets</b>
+- <b>Subscribing to events</b>
+    <p>If we addEventListener to a element, cleanup return should removeEventListener</p>
+- <b>Triggering animations </b>
+    <p>If the Effect animates something in, the cleanup function should reset the animation to the initial value</p>
+- <b>Fetching data</b>
+    <p>If your Effect fetches something, the cleanup function should either abort the fetch or ignore its result:</p>
+    <p>create a ignore variable that we changes it bool value to true</p>
+- <b>Not an Effect: Initializing the application </b>
+    <p>Some logic should only run once when the application starts. You can put it outside your components:</p>
+- <b>Not an Effect: Buying a product </b>
+    <p>Buying product is not an effect because it is cause by a particular interaction.</p>
+    <p>any interaction that is specific can be a eventhandlers</p>
+- <b>Development-only behaviors</b>
+    <p>When Strict Mode is on, React remounts every component once after mount (state and DOM are preserved). This helps you find Effects that need cleanup and exposes bugs like race conditions early. Additionally, React will remount the Effects whenever you save a file in development. Both of these behaviors are development-only.
+    </p>
+- <b>Recap:</b>
+
+  - Unlike events, Effects are caused by rendering itself rather than a particular interaction.
+  - Effects let you synchronize a component with some external system (third-party API, network, etc).
+  - By default, Effects run after every render (including the initial one).
+  - React will skip the Effect if all of its dependencies have the same values as during the last render.
+  - You can’t “choose” your dependencies. They are determined by the code inside the Effect.
+
+- <b>Effect Lifecycle</b>
+
+  - start synchronizing - e.g: start fetching from api
+  - stop synchronizing - e.g: stop fetching/ignoring the data from the api
+
+- <b> Each Effect in your code should represent a separate and independent synchronization process. </b>
 
 - <b>You Might Not Need an Effect </b>
+
   - You don’t need Effects to transform data for rendering.
     <p>such as variables that can be compute from existing state, props, or context</p>
 
   - You don’t need Effects to handle user events.
     <p>It is handled by the corresponding event handlers</p>
 
-- <h4>useMemo </h4>
-  - it is a function that runs with dep, if the dep doesn't change in re-render it return the cache value
+- <b>Effect Dependencies</b>
   
-  - Is use to optimize the performance of a React component by memoizing (caching) the results of a calculation or function.
-  
-  - params: calculateValue, dependencies
-    - calculateValue is a <b>pure calculations</b>
-    - dependencies are variables that when change it reruns the calculateValue in the next render
-  
-  - how to tell if calculation is expensive
-    - if the time it takes to compute is > 1ms, then we will opt to useMemo
+  - when passing a object or function that is created inside a component, and we use those as dependencies in our useEffect everytime we re-render even if the object or fn values are the same it treats those as not the same
+
+  - If we needed a object or fn that is reactive, we may declare those inside the effect. 
+
+  - or if those obj or fn doesn't reactive, We move them outside the component  
+
+  - sometimes, the objects are passed from parent. so everytime it rerenders it runs the effect. To fix this, we destructure the object outside the effect and passed it as individual dep. 
+
+### useMemo
+
+- it is a function that runs with dep, if the dep doesn't change in re-render it return the cache value
+
+- Is use to optimize the performance of a React component by memoizing (caching) the results of a calculation or function.
+
+- params: calculateValue, dependencies
+
+  - calculateValue is a <b>pure calculations</b>
+  - dependencies are variables that when change it reruns the calculateValue in the next render
+
+- how to tell if calculation is expensive
+  - if the time it takes to compute is > 1ms, then we will opt to useMemo
+
+### useEffectEvent
+
+- it is part of effect logic but it behaves like a event. 
+- the logic inside it is not a reactive
+   
+### custom hooks
+- are user define hooks, that always starts with use
+- are use when we want to use the hooks across multiple component
+- can combine different native hooks
 
 ### Necessary things
+
 - importing:
   local
   import <name> from "./src/img/profile"
@@ -440,9 +487,9 @@ syntax:
   <br>
   e.g:
   < MySection>
-    < Sort />
-    < Todos />
-    < AddTodo />
+  < Sort />
+  < Todos />
+  < AddTodo />
   </ MySection>
   <br>
   function MySection({children}){
@@ -451,6 +498,31 @@ syntax:
 
 - <b>mounting</b> an instance of a component is being created and inserted into the DOM.
 - <b>unmounting</b> the component is not needed and gets unmounted.
+
+### the differences between events and effects
+
+- we use effect when the logic needs to execute when a component mount.
+- we use event when the logic needs to execute when user does soemthing like pressing a btn.
+
+- when we use effect, the logic <b>automatically</b> executes when the dependency changes
+- when we use event the logic <b>manually</b> runs when the user does soemthing like pressing a btn.
+
+### {...props}
+
+- is use when a parent components pass a props to child and that child pass those component to another child.
+
+### Resetting state with a key
+
+- we can use key to reset all the components changes
+- it treats the component new or different.
+- docu: https://react.dev/reference/react/useState#resetting-state-with-a-key
+
+- any properties can directly access any props or state
+  - e.g: < button disabled={message === ''}> </ button>
+
+### Any variable that's inside a components' body are reactive
+
+- because they can change their value during rendering(re-rendering process)
 
 <h1> Steps on creating the ui in React </h1>
 
